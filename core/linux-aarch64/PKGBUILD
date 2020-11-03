@@ -9,7 +9,7 @@ _srcname=linux-5.9
 _kernelname=${pkgbase#linux}
 _desc="AArch64 multi-platform"
 pkgver=5.9.3
-pkgrel=1
+pkgrel=2
 arch=('aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -21,6 +21,7 @@ source=("http://www.kernel.org/pub/linux/kernel/v5.x/${_srcname}.tar.xz"
         '0002-arm64-dts-rockchip-disable-pwm0-on-rk3399-firefly.patch'
         '0003-arm64-dts-rockchip-add-usb3-controller-node-for-RK33.patch'
         '0004-arm64-dts-rockchip-enable-usb3-nodes-on-rk3328-rock6.patch'
+        "0005-net-bcmgenet-workaround-2-for-pi4-ethernet-fail.patch::https://github.com/raspberrypi/linux/commit/3214760cb8572effa729dad7d03bc5a2d4df5724.patch"
         'config'
         'kernel.its'
         'kernel.keyblock'
@@ -34,6 +35,7 @@ md5sums=('0959d759fd19e146367221aff504ad91'
          'e85e2b7aa3bc42d7dd6b36c325d29e3f'
          '2c36fb143c27ed46f498c4d4633ea0c6'
          '2e3fe5b9053d6a2c5327113836409d13'
+         '2f67c2b28bcc6724e40b31951e0d4e38'
          '255f717a8e63a6c3b763cec4c57e5562'
          '7f1a96e24f5150f790df94398e9525a3'
          '61c5ff73c136ed07a7aadbf58db3d96a'
@@ -53,6 +55,8 @@ prepare() {
   git apply ../0002-arm64-dts-rockchip-disable-pwm0-on-rk3399-firefly.patch
   git apply ../0003-arm64-dts-rockchip-add-usb3-controller-node-for-RK33.patch
   git apply ../0004-arm64-dts-rockchip-enable-usb3-nodes-on-rk3328-rock6.patch
+  # see note about adding 'genet.skip_umac_reset=n' in patch comments
+  git apply ../0005-net-bcmgenet-workaround-2-for-pi4-ethernet-fail.patch
 
   cat "${srcdir}/config" > ./.config
 
