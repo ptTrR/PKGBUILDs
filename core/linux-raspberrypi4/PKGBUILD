@@ -6,11 +6,11 @@
 buildarch=4
 
 pkgbase=linux-raspberrypi4
-_commit=ffb90a8b06e5ebd6a918c56b44260c3dae8f3348
+_commit=bb6c611cf1b418da87255493cf9330a4686f46d4
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
-pkgver=5.4.81
+pkgver=5.10.rc3
 pkgrel=1
 arch=('armv7h')
 url="http://www.kernel.org/"
@@ -24,10 +24,10 @@ source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
         'linux.preset'
         '60-linux.hook'
         '90-linux.hook')
-md5sums=('67d627bf708d9e04d6adbf712a651e71'
+md5sums=('2d6c23a63c8ad998c905bfe8d486a7bf'
          '7c6b37a1353caccf6d3786bb4161c218'
          '60bc3624123c183305677097bcd56212'
-         '0fc39bc5d19ba8503011ab5e033de67d'
+         'e9e3eab9efa47c1f0cc0ba490215a03b'
          '86d4a35722b5410e3b29fc92dae15d4b'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          '69e1db90d78f691dc446fe2ab94727eb')
@@ -152,7 +152,8 @@ _package-headers() {
   cp -t "${_builddir}" -a include scripts
 
   install -Dt "${_builddir}/arch/${KARCH}" -m644 arch/${KARCH}/Makefile
-  install -Dt "${_builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s arch/$KARCH/kernel/module.lds
+  #install -Dt "${_builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s arch/$KARCH/kernel/module.lds
+  install -Dt "${_builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s
 
   cp -t "${_builddir}/arch/${KARCH}" -a arch/${KARCH}/include
 
