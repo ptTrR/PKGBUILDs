@@ -3,31 +3,36 @@
 # Maintainer: Oleg Rakhmanov <oleg@archlinuxarm.org>
 # Maintainer: graysky <graysky@archlinux.us>
 
-buildarch=4
+buildarch=12
 
 pkgbase=linux-raspberrypi4
-_commit=57604cb6dbf019b1733500c5bfac1a51e48791d4
+_commit=e850ab437a2d0fa607d410b7bae62f90fb941430
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
-pkgver=5.10.rc4
+pkgver=5.10.rc5
 pkgrel=1
-arch=('armv7h')
+arch=('armv7h' 'aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git')
 options=('!strip')
 source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
+	#"disable-gcc-plugins.patch::https://github.com/raspberrypi/linux/commit/0b5da293d8cd525401354dfbbcc2f758b7bf5b0a.patch"
         'config.txt'
+        'config8.txt'
         'cmdline.txt'
         'config'
+        'config8'
         'linux.preset'
         '60-linux.hook'
         '90-linux.hook')
-md5sums=('ab0e89259f99e76cd3a929b0e78793c4'
+md5sums=('270bf19173275f2051964d1233af1794'
          '7c6b37a1353caccf6d3786bb4161c218'
+         '1cac5b1e040fd4bd6535cb6d0ffe487c'
          '60bc3624123c183305677097bcd56212'
          'e9e3eab9efa47c1f0cc0ba490215a03b'
+         '292f8e303f2e68c6f88ae6d6135069bd'
          '86d4a35722b5410e3b29fc92dae15d4b'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          '69e1db90d78f691dc446fe2ab94727eb')
@@ -35,7 +40,10 @@ md5sums=('ab0e89259f99e76cd3a929b0e78793c4'
 prepare() {
   cd "${srcdir}/${_srcname}"
 
-  cat "${srcdir}/config" > ./.config
+  [[ $CARCH == "armv7h" ]]  &&  cat "${srcdir}/config" > ./.config
+  [[ $CARCH == "aarch64" ]] &&  cat "${srcdir}/config8" > ./.config
+
+  #patch -Rp1 -i ../disable-gcc-plugins.patch
 
   # add pkgrel to extraversion
   sed -ri "s|^(EXTRAVERSION =)(.*)|\1 \2-${pkgrel}|" Makefile
@@ -71,7 +79,8 @@ build() {
 
   #yes "" | make config
 
-  make ${MAKEFLAGS} zImage modules dtbs
+  [[ $CARCH == "armv7h" ]] &&  make ${MAKEFLAGS} zImage modules dtbs
+  [[ $CARCH == "aarch64" ]] &&  make ${MAKEFLAGS} Image modules dtbs
 }
 
 _package() {
@@ -86,8 +95,8 @@ _package() {
 
   cd "${srcdir}/${_srcname}"
 
-  KARCH=arm
-
+  [[ $CARCH == "armv7h" ]] && KARCH=arm
+  [[ $CARCH == "aarch64" ]] && KARCH=arm64
   # get kernel version
   _kernver="$(make kernelrelease)"
   _basekernel=${_kernver%%-*}
@@ -97,7 +106,8 @@ _package() {
   make INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
   make INSTALL_DTBS_PATH="${pkgdir}/boot" dtbs_install
 
-  cp arch/$KARCH/boot/zImage "${pkgdir}/boot/kernel7.img"
+  [[ $CARCH == "armv7h" ]] &&  cp arch/$KARCH/boot/zImage "${pkgdir}/boot/kernel7.img"
+  [[ $CARCH == "aarch64" ]] &&  cp arch/$KARCH/boot/Image "${pkgdir}/boot/kernel8.img"
   cp arch/$KARCH/boot/dts/overlays/README "${pkgdir}/boot/overlays"
 
   # make room for external modules
@@ -132,7 +142,9 @@ _package() {
     install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/90-${pkgbase}.hook"
 
   # install boot files
-  install -m644 ../config.txt ../cmdline.txt "${pkgdir}/boot"
+  [[ $CARCH == "armv7h" ]] && install -m644 ../config.txt "${pkgdir}/boot/config.txt"
+  [[ $CARCH == "aarch64" ]] && install -m644 ../config8.txt "${pkgdir}/boot/config.txt"
+  install -m644 ../cmdline.txt "${pkgdir}/boot"
 }
 
 _package-headers() {
