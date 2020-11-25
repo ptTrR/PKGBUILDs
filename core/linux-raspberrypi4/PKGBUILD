@@ -11,7 +11,7 @@ _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
 pkgver=5.10.rc5
-pkgrel=1
+pkgrel=2
 arch=('armv7h' 'aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -22,6 +22,7 @@ source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
         'config.txt'
         'config8.txt'
         'cmdline.txt'
+        config8.manjaro
         'config'
         'config8'
         'linux.preset'
@@ -31,6 +32,7 @@ md5sums=('270bf19173275f2051964d1233af1794'
          '7c6b37a1353caccf6d3786bb4161c218'
          '1cac5b1e040fd4bd6535cb6d0ffe487c'
          '60bc3624123c183305677097bcd56212'
+         '6b9abf1201e3ce87606d878115b0b603'
          'e9e3eab9efa47c1f0cc0ba490215a03b'
          '292f8e303f2e68c6f88ae6d6135069bd'
          '86d4a35722b5410e3b29fc92dae15d4b'
@@ -41,7 +43,8 @@ prepare() {
   cd "${srcdir}/${_srcname}"
 
   [[ $CARCH == "armv7h" ]]  &&  cat "${srcdir}/config" > ./.config
-  [[ $CARCH == "aarch64" ]] &&  cat "${srcdir}/config8" > ./.config
+  #[[ $CARCH == "aarch64" ]] &&  cat "${srcdir}/config8" > ./.config
+  [[ $CARCH == "aarch64" ]] &&  cat "${srcdir}/config8.manjaro" > ./.config
 
   #patch -Rp1 -i ../disable-gcc-plugins.patch
 
