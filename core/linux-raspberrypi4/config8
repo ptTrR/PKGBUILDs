@@ -15,8 +15,6 @@ CONFIG_IRQ_WORK=y
 CONFIG_BUILDTIME_TABLE_SORT=y
 CONFIG_THREAD_INFO_IN_TASK=y
 
-CONFIG_ARM_RASPBERRYPI_CPUFREQ=y
-
 #
 # General setup
 #
@@ -4040,6 +4038,11 @@ CONFIG_VIDEOBUF_VMALLOC=m
 # Media controller options
 #
 CONFIG_MEDIA_CONTROLLER_DVB=y
+CONFIG_MEDIA_CONTROLLER_REQUEST_API=y
+
+#
+# Please notice that the enabled Media controller Request API is EXPERIMENTAL
+#
 # end of Media controller options
 
 #
@@ -6212,7 +6215,7 @@ CONFIG_AD2S1210=m
 
 # CONFIG_FB_SM750 is not set
 CONFIG_STAGING_MEDIA=y
-# CONFIG_VIDEO_RPIVID is not set
+CONFIG_VIDEO_RPIVID=m
 # CONFIG_VIDEO_ZORAN is not set
 
 #

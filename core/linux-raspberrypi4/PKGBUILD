@@ -11,18 +11,16 @@ _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
 pkgver=5.10.rc5
-pkgrel=2
+pkgrel=3
 arch=('armv7h' 'aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git')
 options=('!strip')
 source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
-	#"disable-gcc-plugins.patch::https://github.com/raspberrypi/linux/commit/0b5da293d8cd525401354dfbbcc2f758b7bf5b0a.patch"
         'config.txt'
         'config8.txt'
         'cmdline.txt'
-        config8.manjaro
         'config'
         'config8'
         'linux.preset'
@@ -32,9 +30,8 @@ md5sums=('270bf19173275f2051964d1233af1794'
          '7c6b37a1353caccf6d3786bb4161c218'
          '1cac5b1e040fd4bd6535cb6d0ffe487c'
          '60bc3624123c183305677097bcd56212'
-         '6b9abf1201e3ce87606d878115b0b603'
          'e9e3eab9efa47c1f0cc0ba490215a03b'
-         '292f8e303f2e68c6f88ae6d6135069bd'
+         'f9baa1f205346411c369cb5d59105740'
          '86d4a35722b5410e3b29fc92dae15d4b'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          '69e1db90d78f691dc446fe2ab94727eb')
@@ -43,10 +40,7 @@ prepare() {
   cd "${srcdir}/${_srcname}"
 
   [[ $CARCH == "armv7h" ]]  &&  cat "${srcdir}/config" > ./.config
-  #[[ $CARCH == "aarch64" ]] &&  cat "${srcdir}/config8" > ./.config
-  [[ $CARCH == "aarch64" ]] &&  cat "${srcdir}/config8.manjaro" > ./.config
-
-  #patch -Rp1 -i ../disable-gcc-plugins.patch
+  [[ $CARCH == "aarch64" ]] &&  cat "${srcdir}/config8" > ./.config
 
   # add pkgrel to extraversion
   sed -ri "s|^(EXTRAVERSION =)(.*)|\1 \2-${pkgrel}|" Makefile
