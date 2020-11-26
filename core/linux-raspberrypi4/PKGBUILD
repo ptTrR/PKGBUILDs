@@ -10,8 +10,8 @@ _commit=e850ab437a2d0fa607d410b7bae62f90fb941430
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
-pkgver=5.10.rc5
-pkgrel=3
+pkgver=5.10.0.rc5
+pkgrel=4
 arch=('armv7h' 'aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -31,7 +31,7 @@ md5sums=('270bf19173275f2051964d1233af1794'
          '1cac5b1e040fd4bd6535cb6d0ffe487c'
          '60bc3624123c183305677097bcd56212'
          'e9e3eab9efa47c1f0cc0ba490215a03b'
-         'f9baa1f205346411c369cb5d59105740'
+         '419a4e2b2f5d978367566524d27953b3'
          '86d4a35722b5410e3b29fc92dae15d4b'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          '69e1db90d78f691dc446fe2ab94727eb')
