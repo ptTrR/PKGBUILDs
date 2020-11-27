@@ -28,12 +28,10 @@ makedepends=(
   'libmodplug' 'libmpeg2' 'libnfs' 'libplist' 'libpulse' 'libva'
   'libvdpau' 'libxrandr' 'libxslt' 'lirc' 'lzo' 'mesa' 'nasm'
   'python-pycryptodomex' 'python-pillow' 'python-pybluez' 'python-simplejson'
-  'shairplay' 'smbclient' 'taglib' 'tinyxml' 'swig'
+  'shairplay' 'smbclient' 'taglib' 'tinyxml' 'swig' 'libcec-rpi'
   'upower' 'giflib' 'rapidjson' 'ghostscript' 'git' 'meson' 'gtest'
   'libinput' 'libxkbcommon' 'linux-raspberrypi4-headers'
 )
-makedepends_armv7h=('libcec-rpi')
-makedepends_aarch64=('libcec')
 
 _codename=Leia
 # Found on their respective github release pages. One can check them against
@@ -122,7 +120,7 @@ build() {
 
   _kernel_release="$(pacman -Q linux-raspberrypi4-headers | grep -Eo "[^\ ]+$")-ARCH"
   mkdir -p "$srcdir/uapi/drm"
-  ln -s /usr/lib/modules/$_kernel_release/build/include/uapi/drm/drm_fourcc.h "$srcdir/uapi/drm"
+  ln -s /usr/lib/modules/${_kernel_release/.rc/-rc}/build/include/uapi/drm/drm_fourcc.h "$srcdir/uapi/drm"
   export CPPFLAGS+=" -I$srcdir/uapi"
 
     # these are needed for armv7h but not for aarch64
@@ -159,13 +157,11 @@ package_kodi-rpi-git() {
   depends=(
     'desktop-file-utils' 'hicolor-icon-theme' 'mesa' 'python-pycryptodomex'
     'python-pillow' 'python-simplejson' 'xorg-xdpyinfo'
-    'bluez-libs' 'curl' 'lcms2' 'libass' 'libbluray' 'libcdio'
+    'bluez-libs' 'curl' 'lcms2' 'libass' 'libbluray' 'libcdio' 'libcec-rpi'
     'libinput' 'libmicrohttpd' 'libnfs' 'libpulse' 'libva' 'libxkbcommon'
     'libxslt' 'lirc' 'mariadb-libs' 'python2' 'smbclient' 'taglib'
     'tinyxml' 'polkit' 'linux>=5.4.35' 'shairplay' 'dav1d' 'libplist'
   )
-  depends_armv7h=('libcec-rpi')
-  depends_aarch64=('libcec')
   optdepends=(
     'afpfs-ng: Apple shares support'
     'bluez: Blutooth support'
