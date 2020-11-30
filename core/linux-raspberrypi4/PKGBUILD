@@ -11,7 +11,7 @@ _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
 pkgver=5.10.0.rc5
-pkgrel=8
+pkgrel=9
 arch=('armv7h' 'aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -29,9 +29,9 @@ md5sums=('aab24cb8f2bc58125e904aeead55a225'
          '86d4a35722b5410e3b29fc92dae15d4b'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          '69e1db90d78f691dc446fe2ab94727eb')
-md5sums_armv7h=('c2a2c164bc3415b4e2d9bc000b9dc377'
+md5sums_armv7h=('57f8afa02ff6bd743dfd57ae7b128793'
                 '7c6b37a1353caccf6d3786bb4161c218')
-md5sums_aarch64=('6582b8dcd69023e58d5b760bdc656e5d'
+md5sums_aarch64=('979f8129df5f8f3693863fba8a717117'
                  '1cac5b1e040fd4bd6535cb6d0ffe487c')
 
 # setup vars
