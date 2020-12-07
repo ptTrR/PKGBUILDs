@@ -24,15 +24,14 @@ license=('GPL2')
 makedepends=(
   'afpfs-ng' 'bluez-libs' 'cmake' 'curl' 'dav1d' 'doxygen' 'glew'
   'gperf' 'hicolor-icon-theme' 'java-runtime' 'libaacs' 'libass'
-  'libbluray' 'libcdio' 'libgl' 'mariadb-libs' 'libmicrohttpd'
+  'libbluray' 'libcdio' 'libcec-rpi' 'libgl' 'mariadb-libs' 'libmicrohttpd'
   'libmodplug' 'libmpeg2' 'libnfs' 'libplist' 'libpulse' 'libva'
   'libvdpau' 'libxrandr' 'libxslt' 'lirc' 'lzo' 'mesa' 'nasm'
   'python-pycryptodomex' 'python-pillow' 'python-pybluez' 'python-simplejson'
-  'shairplay' 'smbclient' 'taglib' 'tinyxml' 'swig' 'libcec-rpi'
+  'shairplay' 'smbclient' 'taglib' 'tinyxml' 'swig'
   'upower' 'giflib' 'rapidjson' 'ghostscript' 'git' 'meson' 'gtest'
   'libinput' 'libxkbcommon' 'linux-raspberrypi4-headers'
 )
-
 _codename=Leia
 # Found on their respective github release pages. One can check them against
 # what is pulled down when not specifying them in the cmake step.
@@ -123,31 +122,40 @@ build() {
   ln -s /usr/lib/modules/${_kernel_release/.rc/-rc}/build/include/uapi/drm/drm_fourcc.h "$srcdir/uapi/drm"
   export CPPFLAGS+=" -I$srcdir/uapi"
 
-    # these are needed for armv7h but not for aarch64
-    #-DCMAKE_EXE_LINKER_FLAGS_INIT="-L/opt/vc/lib -lvcsm" \
-    #-DCMAKE_EXE_LINKER_FLAGS="-L/opt/vc/lib -lvcsm" \
-    #-DCMAKE_CXX_FLAGS="-Wl,-L/opt/vc/lib -Wl,-lvcsm" \
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-    -DENABLE_EVENTCLIENTS=ON \
-    -DENABLE_INTERNAL_FFMPEG=ON \
-    -DENABLE_INTERNAL_FMT=ON \
-    -DENABLE_INTERNAL_CROSSGUID=ON \
-    -DENABLE_INTERNAL_FSTRCMP=ON \
-    -DENABLE_INTERNAL_FLATBUFFERS=ON \
-    -DENABLE_INTERNAL_SPDLOG=ON \
-    -DCORE_PLATFORM_NAME=gbm \
-    -DAPP_RENDER_SYSTEM=gles \
-    -Dlibdvdcss_URL="$srcdir/libdvdcss-$_libdvdcss_version.tar.gz" \
-    -Dlibdvdnav_URL="$srcdir/libdvdnav-$_libdvdnav_version.tar.gz" \
-    -Dlibdvdread_URL="$srcdir/libdvdread-$_libdvdread_version.tar.gz" \
-    -DFFMPEG_URL="$srcdir/ffmpeg-$_ffmpeg_version.tar.gz" \
-    -DFMT_URL="$srcdir/fmt-$_fmt_version.tar.gz" \
-    -DCROSSGUID_URL="$srcdir/crossguid-$_crossguid_version.tar.gz" \
-    -DFSTRCMP_URL="$srcdir/fstrcmp-$_fstrcmp_version.tar.gz" \
-    -DFLATBUFFERS_URL="$srcdir/flatbuffers-$_flatbuffers_version.tar.gz" \
-    -DSPDLOG_URL="$srcdir/spdlog-$_spdlog_version.tar.gz" \
-    ../"xbmc-$_commit"
+  _args=(
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib
+    -DENABLE_EVENTCLIENTS=ON
+    -DENABLE_INTERNAL_FFMPEG=ON
+    -DENABLE_INTERNAL_FMT=ON
+    -DENABLE_INTERNAL_CROSSGUID=ON
+    -DENABLE_INTERNAL_FSTRCMP=ON
+    -DENABLE_INTERNAL_FLATBUFFERS=ON
+    -DENABLE_INTERNAL_SPDLOG=ON
+    -DCORE_PLATFORM_NAME=gbm
+    -DAPP_RENDER_SYSTEM=gles
+    -Dlibdvdcss_URL="$srcdir/libdvdcss-$_libdvdcss_version.tar.gz"
+    -Dlibdvdnav_URL="$srcdir/libdvdnav-$_libdvdnav_version.tar.gz"
+    -Dlibdvdread_URL="$srcdir/libdvdread-$_libdvdread_version.tar.gz"
+    -DFFMPEG_URL="$srcdir/ffmpeg-$_ffmpeg_version.tar.gz"
+    -DFMT_URL="$srcdir/fmt-$_fmt_version.tar.gz"
+    -DCROSSGUID_URL="$srcdir/crossguid-$_crossguid_version.tar.gz"
+    -DFSTRCMP_URL="$srcdir/fstrcmp-$_fstrcmp_version.tar.gz"
+    -DFLATBUFFERS_URL="$srcdir/flatbuffers-$_flatbuffers_version.tar.gz"
+    -DSPDLOG_URL="$srcdir/spdlog-$_spdlog_version.tar.gz"
+  )
+
+  if [[ $CARCH = "armv7h" ]]; then
+    # this is only needed if the kernel version is <5.10.0
+    # can be removed once 5.10.y goes gold
+    _args+=(
+    -DCMAKE_EXE_LINKER_FLAGS_INIT="-L/opt/vc/lib -lvcsm"
+    -DCMAKE_EXE_LINKER_FLAGS="-L/opt/vc/lib -lvcsm"
+    -DCMAKE_CXX_FLAGS="-Wl,-L/opt/vc/lib -Wl,-lvcsm"
+    )
+  fi
+
+  cmake "${_args[@]}" ../"xbmc-$_commit"
   make
   make preinstall
 }
