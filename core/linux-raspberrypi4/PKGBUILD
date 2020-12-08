@@ -11,7 +11,7 @@ _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
 pkgver=5.10.0.rc7
-pkgrel=1
+pkgrel=2
 arch=('armv7h' 'aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -23,22 +23,22 @@ source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
         '60-linux.hook'
         '90-linux.hook'
         0001-Make-proc-cpuinfo-consistent-on-arm64-and-arm.patch)
-source_armv7h=('config' 'config.txt')
-source_aarch64=('config8' 'config8.txt')
+source_armv7h=('defconfig' 'config.txt')
+source_aarch64=('defconfig8' 'config8.txt')
 md5sums=('1cd33b5149b6d968dd28090e9f797e8e'
          'ae9fa2a98aca88cb8d38e76110aa77e1'
          '86d4a35722b5410e3b29fc92dae15d4b'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          '69e1db90d78f691dc446fe2ab94727eb'
          'f66a7ea3feb708d398ef57e4da4815e9')
-md5sums_armv7h=('bf10ea42389263e423bad1b4a45905ad'
+md5sums_armv7h=('59f7a003bf9f1807481e643c88e96851'
                 '7c6b37a1353caccf6d3786bb4161c218')
-md5sums_aarch64=('892e1306a58130c47ef6d34e065d9293'
+md5sums_aarch64=('f9de65f24a59c0949b350bc19d4048b4'
                  '1cac5b1e040fd4bd6535cb6d0ffe487c')
 
 # setup vars
-[[ $CARCH == "armv7h" ]] && _kernel=kernel7.img KARCH=arm _image=zImage _config=config _bconfig=config.txt
-[[ $CARCH == "aarch64" ]] && _kernel=kernel8.img KARCH=arm64 _image=Image _config=config8 _bconfig=config8.txt
+[[ $CARCH == "armv7h" ]] && _kernel=kernel7.img KARCH=arm _image=zImage _config=defconfig _bconfig=config.txt
+[[ $CARCH == "aarch64" ]] && _kernel=kernel8.img KARCH=arm64 _image=Image _config=defconfig8 _bconfig=config8.txt
 
 prepare() {
   cd "${srcdir}/${_srcname}"
@@ -50,6 +50,9 @@ prepare() {
 
   # don't run depmod on 'make install'. We'll do this ourselves in packaging
   sed -i '2iexit 0' scripts/depmod.sh
+
+  # expand Arch ARM defconfig
+  make olddefconfig
 
   patch -Np1 -i ../0001-Make-proc-cpuinfo-consistent-on-arm64-and-arm.patch
 }
