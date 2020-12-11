@@ -39,6 +39,10 @@ post_upgrade() {
     echo "________________________________________________________________________________"
     echo ""
   fi
+
+  if [ "$(vercmp $2 5.10.0)" -lt 0 ]; then
+    correct_fstab
+  fi
 }
 
 post_remove() {
