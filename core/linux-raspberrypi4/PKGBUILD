@@ -11,7 +11,7 @@ _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
 pkgver=5.10.0.rc7
-pkgrel=3
+pkgrel=4
 arch=('armv7h' 'aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -162,8 +162,7 @@ _package-headers() {
   cp -t "${_builddir}" -a include scripts
 
   install -Dt "${_builddir}/arch/${KARCH}" -m644 arch/${KARCH}/Makefile
-  #install -Dt "${_builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s arch/$KARCH/kernel/module.lds
-  install -Dt "${_builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s
+  install -Dt "${_builddir}/arch/${KARCH}/kernel" -m644 arch/${KARCH}/kernel/asm-offsets.s scripts/module.lds
 
   cp -t "${_builddir}/arch/${KARCH}" -a arch/${KARCH}/include
 
