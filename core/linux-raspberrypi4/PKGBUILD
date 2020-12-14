@@ -6,12 +6,13 @@
 buildarch=12
 
 pkgbase=linux-raspberrypi4
-_commit=7b437cc84cf0f4701bb6080d2aef91fdd8efcc22
+# switch to pulling from 5.10-hdmi-cec-rework
+_commit=8930cf09d96b05629685da91c5b34f3334b1bf7a
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi 4"
-pkgver=5.10.0.rc7
-pkgrel=4
+pkgver=5.10
+pkgrel=1
 arch=('armv7h' 'aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -25,15 +26,15 @@ source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
         0001-Make-proc-cpuinfo-consistent-on-arm64-and-arm.patch)
 source_armv7h=('config' 'config.txt')
 source_aarch64=('config8' 'config8.txt')
-md5sums=('697ea2c543f2fa130231aa8f78495f92'
+md5sums=('ffda21182a262af06319ee082b6c0761'
          'ae9fa2a98aca88cb8d38e76110aa77e1'
          '86d4a35722b5410e3b29fc92dae15d4b'
          'ce6c81ad1ad1f8b333fd6077d47abdaf'
          '69e1db90d78f691dc446fe2ab94727eb'
          'f66a7ea3feb708d398ef57e4da4815e9')
-md5sums_armv7h=('ece3221438caf895cdd7a842aa134a1b'
+md5sums_armv7h=('0c27bd22dc48e542fd42d228fe1a8b07'
                 '7c6b37a1353caccf6d3786bb4161c218')
-md5sums_aarch64=('b2b4cff1dbc4fb90ea1158493a1e9a70'
+md5sums_aarch64=('ef313d8a9f46c62f9834a7b39ffb943d'
                  '1cac5b1e040fd4bd6535cb6d0ffe487c')
 
 # setup vars
